@@ -1,40 +1,72 @@
 name: generate animation
 
 on:
-  # run automatically every 24 hours
   schedule:
     - cron: "0 */24 * * *" 
-  
-  # allows to manually run the job at any time
   workflow_dispatch:
-  
-  # run on every push on the master branch
   push:
     branches:
-    - master
-    
+      - master
 
 jobs:
   generate:
     permissions: 
       contents: write
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
     
     steps:
-      # generates a snake game from a github user (<github_user_name>) contributions graph, output a svg animation at <svg_out_path>
-      - name: generate github-contribution-grid-snake.svg
+      - name: Generate snake SVGs
         uses: Platane/snk/svg-only@v3
         with:
           github_user_name: ${{ github.repository_owner }}
           outputs: |
             dist/github-contribution-grid-snake.svg
             dist/github-contribution-grid-snake-dark.svg?palette=github-dark
-          
-          
-      # push the content of <build_dir> to a branch
-      # the content will be available at https://raw.githubusercontent.com/<github_user>/<repository>/<target_branch>/<file> , or as github page
-      - name: push github-contribution-grid-snake.svg to the output branch
+
+      - name: Add custom text to SVGs
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y python3 python3-pip
+          pip install beautifulsoup4
+          python3 <<EOF
+          from bs4 import BeautifulSoup
+          import os
+
+          files = [
+              'dist/github-contribution-grid-snake.svg',
+              'dist/github-contribution-grid-snake-dark.svg'
+          ]
+
+          for file_path in files:
+              with open(file_path, 'r+') as f:
+                  soup = BeautifulSoup(f, 'xml')
+                  green_rects = soup.find_all('rect', {'fill': ['#40c463', '#26a641']})
+                  
+                  for rect in green_rects:
+                      x = float(rect['x'])
+                      y = float(rect['y'])
+                      width = float(rect['width'])
+                      height = float(rect['height'])
+                      
+                      text = soup.new_tag('text')
+                      text['x'] = f"{x + width/2}"
+                      text['y'] = f"{y + height/2}"
+                      text['dominant-baseline'] = "middle"
+                      text['text-anchor'] = "middle"
+                      text['fill'] = "#ffffff" if rect['fill'] == '#26a641' else "#000000"
+                      text['font-size'] = "8"
+                      text['font-family'] = "Arial"
+                      text.string = "Hussein Bakr"
+                      
+                      rect.insert_after(text)
+
+                  f.seek(0)
+                  f.write(str(soup))
+                  f.truncate()
+          EOF
+
+      - name: Push SVGs to output
         uses: crazy-max/ghaction-github-pages@v3.1.0
         with:
           target_branch: output
