@@ -1,8 +1,9 @@
 name: generate animation
+
 on:
   schedule:
-    - cron: "0 0 * * *"
-  workflow_dispatch:
+    - cron: '0 0 * * *'
+  workflow_dispatch: {}
   push:
     branches:
       - master
@@ -30,46 +31,57 @@ jobs:
 
       - name: Debug: list dist dir
         run: |
-          echo ">>> قبل التسمية"
+          echo '>>> قبل التسمية'
           ls -lah dist
 
       - name: Rename dark SVG file (with debug)
         run: |
-          echo ">>> Renaming palette file..."
-          mv "dist/github-contribution-grid-snake-dark.svg?palette=github-dark" \
+          echo '>>> Renaming palette file...'
+          mv 'dist/github-contribution-grid-snake-dark.svg?palette=github-dark' \
              dist/github-contribution-grid-snake-dark.svg || \
-          { echo ">> ERROR: الملف مش موجود"; ls -lah dist; exit 1; }
+          (echo 'ERROR: الملف مش موجود' && ls -lah dist && exit 1)
 
       - name: Install Python deps
         run: |
-          sudo apt-get update && sudo apt-get install -y python3-pip
+          sudo apt-get update
+          sudo apt-get install -y python3-pip
           pip3 install beautifulsoup4
 
       - name: Add custom text to SVGs
         run: |
-          python3 <<EOF
+          python3 <<'EOF'
           from bs4 import BeautifulSoup
           import sys
-          files = ['dist/github-contribution-grid-snake.svg','dist/github-contribution-grid-snake-dark.svg']
+          files = [
+              'dist/github-contribution-grid-snake.svg',
+              'dist/github-contribution-grid-snake-dark.svg'
+          ]
           for path in files:
               try:
-                  soup = BeautifulSoup(open(path), 'xml')
+                  with open(path) as f:
+                      soup = BeautifulSoup(f, 'xml')
               except FileNotFoundError:
-                  print(f"ERROR: {path} not found", file=sys.stderr); sys.exit(1)
-              for r in soup.find_all('rect', fill=['#40c463','#26a641']):
-                  x,y,w,h = map(float,(r['x'],r['y'],r['width'],r['height']))
-                  t = soup.new_tag('text', x=str(x+w/2), y=str(y+h/2),
-                                   **{'dominant-baseline':'middle','text-anchor':'middle'},
-                                   fill='#ffffff' if r['fill']=='#26a641' else '#000000',
-                                   **{'font-size':'8','font-family':'Arial'})
-                  t.string="Hussein Bakr"
+                  print(f"ERROR: {path} not found", file=sys.stderr)
+                  sys.exit(1)
+              for r in soup.find_all('rect', fill=['#40c463', '#26a641']):
+                  x, y, w, h = map(float, (r['x'], r['y'], r['width'], r['height']))
+                  t = soup.new_tag(
+                      'text',
+                      x=str(x + w/2),
+                      y=str(y + h/2),
+                      **{'dominant-baseline':'middle', 'text-anchor':'middle'},
+                      fill='#ffffff' if r['fill']=='#26a641' else '#000000',
+                      **{'font-size':'8', 'font-family':'Arial'}
+                  )
+                  t.string = "Hussein Bakr"
                   r.insert_after(t)
-              with open(path,'w') as f: f.write(str(soup))
+              with open(path, 'w') as f:
+                  f.write(str(soup))
           EOF
 
       - name: Debug: list dist after Python
         run: |
-          echo ">>> بعد إضافة النص"
+          echo '>>> بعد إضافة النص'
           ls -lah dist
 
       - name: Push SVGs to output
