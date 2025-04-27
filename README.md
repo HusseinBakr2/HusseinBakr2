@@ -103,9 +103,7 @@
 
 <hr/>
 
-
 <h3 align="center">🐍 Contribution Snake:</h3>
 <p align="center">
- <img src="https://raw.githubusercontent.com/HusseinBakr2/HusseinBakr2/output/github-contribution-grid-snake-dark.svg#gh-dark-mode-only" alt="Custom Snake Animation" width="80%"/>
- <img src="https://raw.githubusercontent.com/HusseinBakr2/HusseinBakr2/output/github-contribution-grid-snake.svg#gh-light-mode-only" alt="Custom Snake Animation" width="80%"/>
+  <img src="https://raw.githubusercontent.com/HusseinBakr2/HusseinBakr2/main/dist/github-contribution-grid-snake.svg" alt="Contribution Snake" width="80%"/>
 </p>
