@@ -103,7 +103,7 @@
 
 <hr/>
 
-<h3 align="center">🐍 My Contributions Snake:</h3>
+<h3 align="center">🐍 Contribution Snake:</h3>
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/husseinbakr2/husseinbakr2/output/github-contribution-grid-snake-dark.svg" />
