@@ -105,8 +105,8 @@
 <h3 align="center">🐍 My Contribution Snake:</h3>
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/husseinbakr2/husseinbakr2/output/github-contribution-grid-snake-dark.svg" />
-    <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/husseinbakr2/husseinbakr2/output/github-contribution-grid-snake.svg" />
-    <img alt="github-snake" src="https://raw.githubusercontent.com/husseinbakr2/husseinbakr2/output/github-contribution-grid-snake.svg" width="100%" />
+    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/husseinbakr2/husseinbakr2/output/dist/github-contribution-grid-snake-dark.svg?palette=github-dark" />
+    <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/husseinbakr2/husseinbakr2/output/dist/github-contribution-grid-snake.svg" />
+    <img alt="github-snake" src="https://raw.githubusercontent.com/husseinbakr2/husseinbakr2/output/dist/github-contribution-grid-snake.svg" width="100%" />
   </picture>
 </p>
