@@ -1,4 +1,4 @@
-name: Generate Custom Snake Animation
+name: Generate Snake Animation
 on:
   schedule:
     - cron: "0 0 * * *"
@@ -23,21 +23,41 @@ jobs:
             dist/github-contribution-grid-snake.svg
             dist/github-contribution-grid-snake-dark.svg?palette=github-dark
 
-      - name: Add Custom Name
+      - name: Add Custom Text
         run: |
-          # For Light Mode
-          sed -i '/<\/svg>/i <text x="50%" y="30" font-family="Arial" font-size="20" fill="#000" text-anchor="middle">Hussein Bakr</text>' dist/github-contribution-grid-snake.svg
+          sudo apt-get install -y xmlstarlet
           
-          # For Dark Mode
-          sed -i '/<\/svg>/i <text x="50%" y="30" font-family="Arial" font-size="20" fill="#fff" text-anchor="middle">Hussein Bakr</text>' dist/github-contribution-grid-snake-dark.svg
+          # Light Mode
+          xmlstarlet ed -L \
+            --subnode '//svg' --type elem -n 'text' \
+            --var text '$prev' \
+            --insert '$text' --type attr -n 'x' -v '50%' \
+            --insert '$text' --type attr -n 'y' -v '35' \
+            --insert '$text' --type attr -n 'font-family' -v 'Arial' \
+            --insert '$text' --type attr -n 'font-size' -v '24' \
+            --insert '$text' --type attr -n 'fill' -v '#2F4F4F' \
+            --insert '$text' --type attr -n 'text-anchor' -v 'middle' \
+            --insert '$text' --type text -v 'Hussein Bakr' \
+            dist/github-contribution-grid-snake.svg
 
-      - name: Push to output branch  # تم تعديل المسافة البادئة هنا
-        uses: crazy-max/ghaction-github-pages@v3.1.0
+          # Dark Mode
+          xmlstarlet ed -L \
+            --subnode '//svg' --type elem -n 'text' \
+            --var text '$prev' \
+            --insert '$text' --type attr -n 'x' -v '50%' \
+            --insert '$text' --type attr -n 'y' -v '35' \
+            --insert '$text' --type attr -n 'font-family' -v 'Arial' \
+            --insert '$text' --type attr -n 'font-size' -v '24' \
+            --insert '$text' --type attr -n 'fill' -v '#F0F0F0' \
+            --insert '$text' --type attr -n 'text-anchor' -v 'middle' \
+            --insert '$text' --type text -v 'Hussein Bakr' \
+            dist/github-contribution-grid-snake-dark.svg
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
         with:
-          target_branch: output
-          build_dir: dist
-          keep_files: false
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+          publish_branch: output
           force_orphan: true
-          commit_message: "Update: Snake Animation [skip ci]"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          keep_files: false
