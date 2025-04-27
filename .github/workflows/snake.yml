@@ -31,16 +31,13 @@ jobs:
           # For Dark Mode
           sed -i '/<\/svg>/i <text x="50%" y="30" font-family="Arial" font-size="20" fill="#fff" text-anchor="middle">Hussein Bakr</text>' dist/github-contribution-grid-snake-dark.svg
 
-     - name: Push to output branch
+      - name: Push to output branch  # تم تعديل المسافة البادئة هنا
         uses: crazy-max/ghaction-github-pages@v3.1.0
         with:
           target_branch: output
           build_dir: dist
           keep_files: false
-          force_orphan: true # هذا السطر يضمن حذف الملفات القديمة
+          force_orphan: true
           commit_message: "Update: Snake Animation [skip ci]"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-
-
