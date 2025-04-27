@@ -1,5 +1,4 @@
 name: Generate Snake Animation
-
 on:
   schedule:
     - cron: "0 */2 * * *"  # Auto-update every 2 hours
