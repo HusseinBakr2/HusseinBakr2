@@ -1,1 +1,21 @@
-
+<svg xmlns="http://www.w3.org/2000/svg" width="835" height="220" viewBox="0 0 835 220">
+<rect width="100%" height="100%" fill="#EBEDF0"/>
+<rect x="50" y="80" width="10" height="10" fill="#2ecc71"><animate attributeName="fill" begin="5s" dur="0.3s" values="#2ecc71;#EBEDF0" fill="freeze"/></rect>
+<rect x="50" y="90" width="10" height="10" fill="#2ecc71"><animate attributeName="fill" begin="5.5s" dur="0.3s" values="#2ecc71;#EBEDF0" fill="freeze"/></rect>
+<rect x="50" y="100" width="10" height="10" fill="#2ecc71"><animate attributeName="fill" begin="6s" dur="0.3s" values="#2ecc71;#EBEDF0" fill="freeze"/></rect>
+<rect x="60" y="90" width="10" height="10" fill="#2ecc71"><animate attributeName="fill" begin="6.5s" dur="0.3s" values="#2ecc71;#EBEDF0" fill="freeze"/></rect>
+<rect x="70" y="80" width="10" height="10" fill="#2ecc71"><animate attributeName="fill" begin="7s" dur="0.3s" values="#2ecc71;#EBEDF0" fill="freeze"/></rect>
+<rect x="70" y="90" width="10" height="10" fill="#2ecc71"><animate attributeName="fill" begin="7.5s" dur="0.3s" values="#2ecc71;#EBEDF0" fill="freeze"/></rect>
+<rect x="70" y="100" width="10" height="10" fill="#2ecc71"><animate attributeName="fill" begin="8s" dur="0.3s" values="#2ecc71;#EBEDF0" fill="freeze"/></rect>
+<rect x="90" y="90" width="10" height="10" fill="#2ecc71"><animate attributeName="fill" begin="9s" dur="0.3s" values="#2ecc71;#EBEDF0" fill="freeze"/></rect>
+<rect x="100" y="80" width="10" height="10" fill="#2ecc71"><animate attributeName="fill" begin="9.5s" dur="0.3s" values="#2ecc71;#EBEDF0" fill="freeze"/></rect>
+<rect x="110" y="90" width="10" height="10" fill="#2ecc71"><animate attributeName="fill" begin="10s" dur="0.3s" values="#2ecc71;#EBEDF0" fill="freeze"/></rect>
+<rect x="120" y="100" width="10" height="10" fill="#2ecc71"><animate attributeName="fill" begin="10.5s" dur="0.3s" values="#2ecc71;#EBEDF0" fill="freeze"/></rect>
+<rect x="150" y="90" width="10" height="10" fill="#2ecc71"><animate attributeName="fill" begin="12s" dur="0.3s" values="#2ecc71;#EBEDF0" fill="freeze"/></rect>
+<rect x="160" y="80" width="10" height="10" fill="#2ecc71"><animate attributeName="fill" begin="12.5s" dur="0.3s" values="#2ecc71;#EBEDF0" fill="freeze"/></rect>
+<rect x="170" y="90" width="10" height="10" fill="#2ecc71"><animate attributeName="fill" begin="13s" dur="0.3s" values="#2ecc71;#EBEDF0" fill="freeze"/></rect>
+<rect x="180" y="100" width="10" height="10" fill="#2ecc71"><animate attributeName="fill" begin="13.5s" dur="0.3s" values="#2ecc71;#EBEDF0" fill="freeze"/></rect>
+<path stroke="#e74c3c" stroke-width="2" fill="none">
+<animate attributeName="d" dur="30s" repeatCount="indefinite" values="M0,0 L50,80 Q60,85 70,80;M50,80 L60,90 Q70,95 80,90;M70,100 L90,90 Q100,85 110,90;M110,90 L120,100 Q130,105 140,100;M120,100 L150,90 Q160,85 170,90;M170,90 L180,100 Q190,105 200,100;M0,0 L200,100 Q300,150 400,100;M400,100 L600,50 Q700,0 800,50;M800,50 L700,150 Q600,200 400,150;M400,150 L200,200 Q100,250 0,200;M0,200 L800,200;M800,200 L0,0;"/>
+</path>
+</svg>
