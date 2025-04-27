@@ -48,3 +48,4 @@ jobs:
             git push
           else
             echo "File 'dist/github-contribution-grid-snake.svg' not found. Skipping commit."
+            exit 0
