@@ -1,20 +1,22 @@
-name: Snake Animation Generator
+name: Generate Contribution Snake
 on:
-  workflow_dispatch:
   schedule:
-    - cron: "0 0 * * *"
+    - cron: "0 0 * * *" # Daily at midnight UTC
+  workflow_dispatch:
   push:
     branches: [main]
 
 jobs:
-  build:
+  generate-snake:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-    steps:
-      - uses: actions/checkout@v4
 
-      - name: Generate Snake
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Generate Snake Graphics
         uses: Platane/snk@v3
         with:
           github_user_name: ${{ github.repository_owner }}
@@ -22,15 +24,15 @@ jobs:
             dist/github-contribution-grid-snake.svg
             dist/github-contribution-grid-snake-dark.svg?palette=github-dark
 
-      - name: Add Customization
+      - name: Add Custom Text
         run: |
-          sudo apt-get install -y xmlstarlet
+          sudo apt-get update && sudo apt-get install -y xmlstarlet
           
           # Light Mode
           xmlstarlet ed -L \
             --subnode '//svg' -t elem -n 'text' -v 'Hussein Bakr' \
             --insert '//text' -t attr -n 'x' -v '50%' \
-            --insert '//text' -t attr -n 'y' -v '30' \
+            --insert '//text' -t attr -n 'y' -v '35' \
             --insert '//text' -t attr -n 'font-family' -v 'Arial' \
             --insert '//text' -t attr -n 'font-size' -v '24' \
             --insert '//text' -t attr -n 'fill' -v '#2F4F4F' \
@@ -41,7 +43,7 @@ jobs:
           xmlstarlet ed -L \
             --subnode '//svg' -t elem -n 'text' -v 'Hussein Bakr' \
             --insert '//text' -t attr -n 'x' -v '50%' \
-            --insert '//text' -t attr -n 'y' -v '30' \
+            --insert '//text' -t attr -n 'y' -v '35' \
             --insert '//text' -t attr -n 'font-family' -v 'Arial' \
             --insert '//text' -t attr -n 'font-size' -v '24' \
             --insert '//text' -t attr -n 'fill' -v '#F0F0F0' \
