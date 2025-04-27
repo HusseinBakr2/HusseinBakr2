@@ -16,8 +16,7 @@ jobs:
     timeout-minutes: 10
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
       - name: Generate snake SVGs
         uses: Platane/snk/svg-only@v3
@@ -34,21 +33,20 @@ jobs:
           mv "dist/github-contribution-grid-snake-dark.svg?palette=github-dark" \
              dist/github-contribution-grid-snake-dark.svg
 
-      - name: Install Python dependencies
+      - name: Install dependencies
         run: |
-          sudo apt-get update
-          sudo apt-get install -y python3-pip
+          sudo apt-get update && sudo apt-get install -y python3-pip
           pip3 install beautifulsoup4
 
       - name: Add custom text to SVGs
         run: |
           python3 << 'EOF'
-          from bs4 import BeautifulSoup, SoupStrainer
+          from bs4 import BeautifulSoup
           import sys
 
           paths = [
-            'dist/github-contribution-grid-snake.svg',
-            'dist/github-contribution-grid-snake-dark.svg'
+              'dist/github-contribution-grid-snake.svg',
+              'dist/github-contribution-grid-snake-dark.svg'
           ]
 
           for path in paths:
