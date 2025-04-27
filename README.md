@@ -96,7 +96,6 @@
 
 <p align="center">
   <img align="left" src="https://github-readme-stats.vercel.app/api/top-langs/?username=husseinbakr2&layout=compact&theme=tokyonight" width="47%" alt="Top Languages"/>
-  &nbsp;&nbsp;&nbsp;
   <img align="right" src="https://github-readme-stats.vercel.app/api?username=husseinbakr2&show_icons=true&theme=tokyonight&locale=en" width="47%" alt="GitHub Stats"/>
 </p>
 
