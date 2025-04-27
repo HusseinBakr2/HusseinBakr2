@@ -2,31 +2,27 @@ name: Generate Snake Animation
 
 on:
   schedule:
-    - cron: "0 */2 * * *"  # تحديث تلقائي كل 2 ساعات
-  workflow_dispatch:        # تشغيل يدوي
+    - cron: "0 */2 * * *"  # Auto-update every 2 hours
+  workflow_dispatch:        # Manual trigger
   push:
     branches:
-      - main               # تشغيل عند الدفع لفرع main
+      - main               # Trigger on push to the main branch
 
 jobs:
   generate:
     runs-on: ubuntu-latest
     permissions:
-      contents: write      # إعطاء صلاحيات الكتابة
+      contents: write      # Grant write permissions
     
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4  # تنزيل الكود أولاً
+        uses: actions/checkout@v4  # Checkout the repository code
 
       - name: Generate Snake
         uses: Platane/snk@master
         with:
           github_user_name: HusseinBakr2
-          show_name: true
-          name_color: '#2EFF2E'  # أخضر نيون للاسم
-          snake_color: '#4CAF50'  # أخضر زمردي للأفعى
-          tile_color: '#708090'   # رمادي فاتح للخلايا
-          output: dist/github-contribution-grid-snake.svg
+          svg_out_path: dist/github-contribution-grid-snake.svg  # Path to the generated SVG file
 
       - name: Create dist directory if missing
         run: mkdir -p dist
