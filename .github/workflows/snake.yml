@@ -1,66 +1,67 @@
-name: Generate Snake
-on:
-  schedule:
-    - cron: "0 0 * * *"
-  workflow_dispatch:
-  push:
-    branches: [main]
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Generate Snake
-        uses: Platane/snk@v3
-        id: snake-gen
-        with:
-          github_user_name: HusseinBakr2
-          outputs: |
-            dist/snake.svg
-            dist/snake-dark.svg?palette=github-dark
-
-      - name: Verify Files
-        run: |
-          ls -la dist/
-
-      - name: Add Custom Text
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y xmlstarlet
-          sudo chmod -R 777 dist/
-          
-          # Light Mode
-          xmlstarlet ed -L \
-            --subnode '//svg' -t elem -n 'text' \
-            --insert '//text' -t attr -n 'x' -v '50%' \
-            --insert '//text' -t attr -n 'y' -v '35' \
-            --insert '//text' -t attr -n 'font-family' -v 'Arial' \
-            --insert '//text' -t attr -n 'font-size' -v '24' \
-            --insert '//text' -t attr -n 'fill' -v '#2F4F4F' \
-            --insert '//text' -t attr -n 'text-anchor' -v 'middle' \
-            --insert '//text' -t text -v 'Hussein Bakr' \
-            dist/snake.svg
-
-          # Dark Mode
-          xmlstarlet ed -L \
-            --subnode '//svg' -t elem -n 'text' \
-            --insert '//text' -t attr -n 'x' -v '50%' \
-            --insert '//text' -t attr -n 'y' -v '35' \
-            --insert '//text' -t attr -n 'font-family' -v 'Arial' \
-            --insert '//text' -t attr -n 'font-size' -v '24' \
-            --insert '//text' -t attr -n 'fill' -v '#F0F0F0' \
-            --insert '//text' -t attr -n 'text-anchor' -v 'middle' \
-            --insert '//text' -t text -v 'Hussein Bakr' \
-            dist/snake-dark.svg
-
-      - name: Force Push to Output
-        uses: peaceiris/actions-gh-pages@v3.9.3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist
-          publish_branch: output
-          force_orphan: true
+ name: Contribution Snake
+ name: Generate Snake
+ on:
+   schedule:
+     - cron: "0 0 * * *"
+ @@ -11,54 +11,19 @@ jobs:
+     runs-on: ubuntu-latest
+     permissions:
+       contents: write
+ 
+     steps:
+       - uses: actions/checkout@v4
+ 
+       - name: Generate Snake
+         uses: Platane/snk@v3
+         with:
+           github_user_name: ${{ github.repository_owner }}
+           github_user_name: HusseinBakr2
+           outputs: |
+             dist/snake.svg
+             dist/snake-dark.svg?palette=github-dark
+ 
+       - name: Install Dependencies
+         run: |
+           sudo apt-get update
+           sudo apt-get install -y xmlstarlet
+ 
+       - name: Add Custom Text
+         run: |
+           # Light Mode
+           xmlstarlet ed -L \
+             --subnode '//svg' -t elem -n 'text' \
+             --var text '$prev' \
+             --insert '$text' -t attr -n 'x' -v '50%' \
+             --insert '$text' -t attr -n 'y' -v '35' \
+             --insert '$text' -t attr -n 'font-family' -v 'Arial' \
+             --insert '$text' -t attr -n 'font-size' -v '24' \
+             --insert '$text' -t attr -n 'fill' -v '#2F4F4F' \
+             --insert '$text' -t attr -n 'text-anchor' -v 'middle' \
+             --insert '$text' -t text -v 'Hussein Bakr' \
+             dist/snake.svg
+ 
+           # Dark Mode
+           xmlstarlet ed -L \
+             --subnode '//svg' -t elem -n 'text' \
+             --var text '$prev' \
+             --insert '$text' -t attr -n 'x' -v '50%' \
+             --insert '$text' -t attr -n 'y' -v '35' \
+             --insert '$text' -t attr -n 'font-family' -v 'Arial' \
+             --insert '$text' -t attr -n 'font-size' -v '24' \
+             --insert '$text' -t attr -n 'fill' -v '#F0F0F0' \
+             --insert '$text' -t attr -n 'text-anchor' -v 'middle' \
+             --insert '$text' -t text -v 'Hussein Bakr' \
+             dist/snake-dark.svg
+ 
+       - name: Deploy
+         uses: JamesIves/github-pages-deploy-action@v4
+         uses: peaceiris/actions-gh-pages@v3.9.3
+         with:
+           branch: output
+           folder: dist
+           clean: true
+           github_token: ${{ secrets.GITHUB_TOKEN }}
+           publish_dir: ./dist
+           publish_branch: output
+           force_orphan: true
