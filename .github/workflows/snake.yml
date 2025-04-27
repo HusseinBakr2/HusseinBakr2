@@ -1,60 +1,54 @@
-name: Generate Contribution Snake
+name: Contribution Snake Generator
 on:
   schedule:
-    - cron: "0 0 * * *" # Daily at midnight UTC
+    - cron: "0 0 * * *" # يوميًا في منتصف الليل
   workflow_dispatch:
   push:
     branches: [main]
 
 jobs:
-  generate-snake:
+  build:
     runs-on: ubuntu-latest
     permissions:
       contents: write
 
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
+      # 1. Checkout Code
+      - uses: actions/checkout@v4
 
-      - name: Generate Snake Graphics
-        uses: Platane/snk@v3
+      # 2. Generate Snake (Action مخصصة)
+      - uses: Platane/snk@v3
+        id: snake
         with:
           github_user_name: ${{ github.repository_owner }}
           outputs: |
-            dist/github-contribution-grid-snake.svg
-            dist/github-contribution-grid-snake-dark.svg?palette=github-dark
+            dist/snake.svg
+            dist/snake-dark.svg?palette=github-dark
 
-      - name: Add Custom Text
-        run: |
-          sudo apt-get update && sudo apt-get install -y xmlstarlet
-          
-          # Light Mode
-          xmlstarlet ed -L \
-            --subnode '//svg' -t elem -n 'text' -v 'Hussein Bakr' \
-            --insert '//text' -t attr -n 'x' -v '50%' \
-            --insert '//text' -t attr -n 'y' -v '35' \
-            --insert '//text' -t attr -n 'font-family' -v 'Arial' \
-            --insert '//text' -t attr -n 'font-size' -v '24' \
-            --insert '//text' -t attr -n 'fill' -v '#2F4F4F' \
-            --insert '//text' -t attr -n 'text-anchor' -v 'middle' \
-            dist/github-contribution-grid-snake.svg
-
-          # Dark Mode
-          xmlstarlet ed -L \
-            --subnode '//svg' -t elem -n 'text' -v 'Hussein Bakr' \
-            --insert '//text' -t attr -n 'x' -v '50%' \
-            --insert '//text' -t attr -n 'y' -v '35' \
-            --insert '//text' -t attr -n 'font-family' -v 'Arial' \
-            --insert '//text' -t attr -n 'font-size' -v '24' \
-            --insert '//text' -t attr -n 'fill' -v '#F0F0F0' \
-            --insert '//text' -t attr -n 'text-anchor' -v 'middle' \
-            dist/github-contribution-grid-snake-dark.svg
-
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3.9.3
+      # 3. Add Custom Text (Action لمعالجة SVG)
+      - uses: actions-hub/svg-manipulator@master
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist
-          publish_branch: output
-          force_orphan: true
-          keep_files: false
+          files: |
+            dist/snake.svg
+            dist/snake-dark.svg
+          actions: |
+            [{
+              "type": "add_element",
+              "selector": "svg",
+              "element": "<text x='50%' y='35' font-family='Arial' font-size='24' fill='#2F4F4F' text-anchor='middle'>Hussein Bakr</text>"
+            }]
+
+      # 4. Force Create Directory (Action لإنشاء مجلدات)
+      - uses: GuillaumeFalourd/create-folder@v1
+        with:
+          folders: "dist"
+          create-in: "repo"
+
+      # 5. Deploy to GitHub Pages (Action لنشر الملفات)
+      - uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          branch: output
+          folder: dist
+          clean: true
+          clean-exclude: |
+            *.svg
