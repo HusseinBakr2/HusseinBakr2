@@ -1,21 +1,27 @@
 name: generate animation
 
 on:
+  # شغّل كل يوم عند منتصف الليل
   schedule:
-    - cron: "0 */24 * * *" 
+    - cron: "0 0 * * *"
   workflow_dispatch:
   push:
     branches:
-      - master
+      - master   # أو غيرها لو سمتها main
 
 jobs:
   generate:
-    permissions: 
-      contents: write
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     timeout-minutes: 10
-    
+
     steps:
+      # لازم تجيب الكونتنتس أولًا
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      # خطوة توليد الـ SVGs – لا تنسى تمرير الـ token هنا
       - name: Generate snake SVGs
         uses: Platane/snk/svg-only@v3
         with:
@@ -23,49 +29,45 @@ jobs:
           outputs: |
             dist/github-contribution-grid-snake.svg
             dist/github-contribution-grid-snake-dark.svg?palette=github-dark
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      # إعادة تسمية ملف الـ dark (مافيش دعم لإزالة ?palette في الـ action)
+      - name: Rename dark SVG file
+        run: |
+          mv "dist/github-contribution-grid-snake-dark.svg?palette=github-dark" \
+             dist/github-contribution-grid-snake-dark.svg
+
+      # تثبيت البايثون والـ bs4
+      - name: Install Python deps
+        run: |
+          sudo apt-get update && sudo apt-get install -y python3-pip
+          pip3 install beautifulsoup4
+
+      # إضافة النص داخل الـ SVGs
       - name: Add custom text to SVGs
         run: |
-          sudo apt-get update
-          sudo apt-get install -y python3 python3-pip
-          pip install beautifulsoup4
           python3 <<EOF
           from bs4 import BeautifulSoup
-          import os
-
           files = [
-              'dist/github-contribution-grid-snake.svg',
-              'dist/github-contribution-grid-snake-dark.svg'
+            'dist/github-contribution-grid-snake.svg',
+            'dist/github-contribution-grid-snake-dark.svg'
           ]
-
-          for file_path in files:
-              with open(file_path, 'r+') as f:
-                  soup = BeautifulSoup(f, 'xml')
-                  green_rects = soup.find_all('rect', {'fill': ['#40c463', '#26a641']})
-                  
-                  for rect in green_rects:
-                      x = float(rect['x'])
-                      y = float(rect['y'])
-                      width = float(rect['width'])
-                      height = float(rect['height'])
-                      
-                      text = soup.new_tag('text')
-                      text['x'] = f"{x + width/2}"
-                      text['y'] = f"{y + height/2}"
-                      text['dominant-baseline'] = "middle"
-                      text['text-anchor'] = "middle"
-                      text['fill'] = "#ffffff" if rect['fill'] == '#26a641' else "#000000"
-                      text['font-size'] = "8"
-                      text['font-family'] = "Arial"
-                      text.string = "Hussein Bakr"
-                      
-                      rect.insert_after(text)
-
-                  f.seek(0)
-                  f.write(str(soup))
-                  f.truncate()
+          for path in files:
+              soup = BeautifulSoup(open(path), 'xml')
+              green = soup.find_all('rect', fill=['#40c463','#26a641'])
+              for r in green:
+                  x,y,w,h = map(float, (r['x'], r['y'], r['width'], r['height']))
+                  t = soup.new_tag('text', x=str(x+w/2), y=str(y+h/2),
+                                   **{'dominant-baseline':'middle','text-anchor':'middle'},
+                                   fill= '#ffffff' if r['fill']=='#26a641' else '#000000',
+                                   **{'font-size':'8','font-family':'Arial'})
+                  t.string = "Hussein Bakr"
+                  r.insert_after(t)
+              with open(path, 'w') as f: f.write(str(soup))
           EOF
 
+      # ادفع للـ branch اسمه output
       - name: Push SVGs to output
         uses: crazy-max/ghaction-github-pages@v3.1.0
         with:
