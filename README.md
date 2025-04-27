@@ -29,6 +29,8 @@
 
 <hr/>
 
+![Snake animation](https://raw.githubusercontent.com/HusseinBakr2/HusseinBakr2/main/dist/github-contribution-grid-snake.svg)
+
 <h3 align="center">🛠️ Languages and Tools:</h3>
 <p align="center">
   <!-- ايقونات اللغات هنا -->
