@@ -1,9 +1,10 @@
 <h1 align="center">Hello!, I'm Hussein Bakr</h1>
 
 <h2 align="center">
-  I’m a passionate Junior Software Testing Engineer with a sharp eye for detail  
-  and a drive to deliver high-quality software. I thrive on ensuring seamless  
-  user experiences through meticulous testing processes.
+
+Junior Software Testing Engineer
+  Passionate about delivering high‑quality software and ensuring seamless user experiences through meticulous testing processes.
+
 </h2><br>
 
 <p align="center">
@@ -103,14 +104,10 @@
 
 <hr/>
 
- <p align="center"> <!-- Snake -->
-    <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/platane/platane/output/github-contribution-grid-snake-dark.svg">
-  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/platane/platane/output/github-contribution-grid-snake.svg">
-  <img alt="github contribution grid snake animation" src="https://raw.githubusercontent.com/platane/platane/output/github-contribution-grid-snake.svg">
-</picture>
-
-  </p>
+<h3 align="center">🟩 My Contribution Animation:</h3>
+<p align="center">
+  <img src="https://raw.githubusercontent.com/HusseinBakr2/HusseinBakr2/output/hussein-contribution-animation.svg" alt="Hussein Bakr Contribution Animation"/>
+</p>
 </p>
 
 
