@@ -104,10 +104,15 @@ Junior Software Testing Engineer
 
 <hr/>
 
-<h3 align="center">🟩 My Contribution Animation:</h3>
-<p align="center">
-  <img src="https://raw.githubusercontent.com/HusseinBakr2/HusseinBakr2/output/hussein-contribution-animation.svg" alt="Hussein Bakr Contribution Animation"/>
+ <p align="center"> <!-- Snake -->
+    <picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/platane/platane/output/github-contribution-grid-snake-dark.svg">
+  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/platane/platane/output/github-contribution-grid-snake.svg">
+  <img alt="github contribution grid snake animation" src="https://raw.githubusercontent.com/platane/platane/output/github-contribution-grid-snake.svg">
+</picture>
+
+  </p>
 </p>
-</p>
+
 
 
