@@ -110,6 +110,8 @@
     <source media="(prefers-color-scheme: light)" srcset="https://husseinbakr2.github.io/HusseinBakr2/snake.svg">
     <img alt="Contribution Snake" src="https://husseinbakr2.github.io/HusseinBakr2/snake.svg" width="100%">
   </picture>
+    
+ ![Snake](https://husseinbakr2.github.io/HusseinBakr2/snake.svg?v=1)
 </p>
 
 
