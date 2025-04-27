@@ -103,13 +103,14 @@
 
 <hr/>
 
-<h2 align="center">🐍 Contribution Snake</h2>
+<h2 align="center">🐍 Contribution Activity</h2>
 <div align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://husseinbakr2.github.io/HusseinBakr2/github-contribution-grid-snake-dark.svg?palette=github-dark&v=4">
-    <source media="(prefers-color-scheme: light)" srcset="https://husseinbakr2.github.io/HusseinBakr2/github-contribution-grid-snake.svg?v=4">
-    <img alt="Contribution Snake" src="https://husseinbakr2.github.io/HusseinBakr2/github-contribution-grid-snake.svg?v=4" width="100%">
+    <source media="(prefers-color-scheme: dark)" srcset="https://husseinbakr2.github.io/HusseinBakr2/github-contribution-grid-snake-dark.svg?palette=github-dark&ts=1">
+    <source media="(prefers-color-scheme: light)" srcset="https://husseinbakr2.github.io/HusseinBakr2/github-contribution-grid-snake.svg?ts=1">
+    <img alt="Contribution Graph" src="https://husseinbakr2.github.io/HusseinBakr2/github-contribution-grid-snake.svg?ts=1" width="100%">
   </picture>
 </div>
+
 
 
