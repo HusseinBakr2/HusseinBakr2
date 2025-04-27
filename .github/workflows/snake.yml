@@ -1,19 +1,16 @@
-name: Generate Snake Animation
-
+name: Generate Custom Snake Animation
 on:
   schedule:
-    - cron: "0 0 * * *"  # Run daily
-  workflow_dispatch:      # Manual trigger
+    - cron: "0 0 * * *"
+  workflow_dispatch:
   push:
-    branches:
-      - main
+    branches: [main]
 
 jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-
     steps:
       - uses: actions/checkout@v3
 
@@ -22,10 +19,17 @@ jobs:
         id: snake-gif
         with:
           github_user_name: ${{ github.repository_owner }}
-          # Generate both light and dark mode SVGs
           outputs: |
             dist/github-contribution-grid-snake.svg
             dist/github-contribution-grid-snake-dark.svg?palette=github-dark
+
+      - name: Add Custom Name
+        run: |
+          # For Light Mode
+          sed -i '/<\/svg>/i <text x="50%" y="30" font-family="Arial" font-size="20" fill="#000" text-anchor="middle">Hussein Bakr</text>' dist/github-contribution-grid-snake.svg
+          
+          # For Dark Mode
+          sed -i '/<\/svg>/i <text x="50%" y="30" font-family="Arial" font-size="20" fill="#fff" text-anchor="middle">Hussein Bakr</text>' dist/github-contribution-grid-snake-dark.svg
 
       - name: Push to output branch
         uses: crazy-max/ghaction-github-pages@v3.1.0
