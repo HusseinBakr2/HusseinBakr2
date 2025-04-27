@@ -16,7 +16,8 @@ jobs:
     timeout-minutes: 10
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
       - name: Generate snake SVGs
         uses: Platane/snk/svg-only@v3
@@ -30,10 +31,11 @@ jobs:
 
       - name: Rename dark SVG
         run: |
-          mv "dist/github-contribution-grid-snake-dark.svg?palette=github-dark" \
-             dist/github-contribution-grid-snake-dark.svg
+          mv \
+            "dist/github-contribution-grid-snake-dark.svg?palette=github-dark" \
+            dist/github-contribution-grid-snake-dark.svg
 
-      - name: Install dependencies
+      - name: Install Python deps
         run: |
           sudo apt-get update && sudo apt-get install -y python3-pip
           pip3 install beautifulsoup4
@@ -45,8 +47,8 @@ jobs:
           import sys
 
           paths = [
-              'dist/github-contribution-grid-snake.svg',
-              'dist/github-contribution-grid-snake-dark.svg'
+            'dist/github-contribution-grid-snake.svg',
+            'dist/github-contribution-grid-snake-dark.svg'
           ]
 
           for path in paths:
@@ -57,11 +59,12 @@ jobs:
                   sys.exit(f'ERROR: {path} not found')
 
               for rect in soup.find_all('rect', fill=['#40c463', '#26a641']):
-                  x, y, w, h = map(float, (rect['x'], rect['y'], rect['width'], rect['height']))
+                  x, y, w, h = map(float, (
+                      rect['x'], rect['y'], rect['width'], rect['height']
+                  ))
                   t = soup.new_tag(
                       'text',
-                      x=str(x + w/2),
-                      y=str(y + h/2),
+                      x=str(x + w/2), y=str(y + h/2),
                       **{
                           'dominant-baseline': 'middle',
                           'text-anchor': 'middle',
