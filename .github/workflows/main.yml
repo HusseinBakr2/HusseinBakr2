@@ -1,73 +1,88 @@
 name: generate animation
+
 on:
   schedule:
-    - cron: "0 */24 * " 
-  workflow_dispatch:
+    - cron: '0 0 * * *'
   push:
     branches:
       - master
+  workflow_dispatch:
+
 jobs:
   generate:
-    permissions: 
-      contents: write
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     timeout-minutes: 10
 
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
       - name: Generate snake SVGs
         uses: Platane/snk/svg-only@v3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           github_user_name: ${{ github.repository_owner }}
           outputs: |
             dist/github-contribution-grid-snake.svg
-            dist/github-contribution-grid-snake-dark.svg?palette=github-dark
-      - name: Add custom text to SVGs
+            "dist/github-contribution-grid-snake-dark.svg?palette=github-dark"
+
+      - name: Rename dark SVG
+        run: |
+          mv "dist/github-contribution-grid-snake-dark.svg?palette=github-dark" \
+             dist/github-contribution-grid-snake-dark.svg
+
+      - name: Install Python dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y python3 python3-pip
-          pip install beautifulsoup4
-          python3 <<EOF
-          from bs4 import BeautifulSoup
-          import os
-          files = [
-              'dist/github-contribution-grid-snake.svg',
-              'dist/github-contribution-grid-snake-dark.svg'
+          sudo apt-get install -y python3-pip
+          pip3 install beautifulsoup4
+
+      - name: Add custom text to SVGs
+        run: |
+          python3 << 'EOF'
+          from bs4 import BeautifulSoup, SoupStrainer
+          import sys
+
+          paths = [
+            'dist/github-contribution-grid-snake.svg',
+            'dist/github-contribution-grid-snake-dark.svg'
           ]
-          for file_path in files:
-              with open(file_path, 'r+') as f:
-                  soup = BeautifulSoup(f, 'xml')
-                  green_rects = soup.find_all('rect', {'fill': ['
-#40c463', '
-#26a641']})
 
-                  for rect in green_rects:
-                      x = float(rect['x'])
-                      y = float(rect['y'])
-                      width = float(rect['width'])
-                      height = float(rect['height'])
+          for path in paths:
+              try:
+                  with open(path) as f:
+                      soup = BeautifulSoup(f, 'xml')
+              except FileNotFoundError:
+                  sys.exit(f'ERROR: {path} not found')
 
-                      text = soup.new_tag('text')
-                      text['x'] = f"{x + width/2}"
-                      text['y'] = f"{y + height/2}"
-                      text['dominant-baseline'] = "middle"
-                      text['text-anchor'] = "middle"
-                      text['fill'] = "
-#ffffff" if rect['fill'] == '
-#26a641' else "
-#000000"
-                      text['font-size'] = "8"
-                      text['font-family'] = "Arial"
-                      text.string = "Hussein Bakr"
+              for rect in soup.find_all('rect', fill=['#40c463', '#26a641']):
+                  x, y, w, h = map(float, (rect['x'], rect['y'], rect['width'], rect['height']))
+                  t = soup.new_tag(
+                      'text',
+                      x=str(x + w/2),
+                      y=str(y + h/2),
+                      **{
+                          'dominant-baseline': 'middle',
+                          'text-anchor': 'middle',
+                          'fill': '#ffffff' if rect['fill']=='#26a641' else '#000000',
+                          'font-size': '8',
+                          'font-family': 'Arial'
+                      }
+                  )
+                  t.string = 'Hussein Bakr'
+                  rect.insert_after(t)
 
-                      rect.insert_after(text)
-                  f.seek(0)
+              with open(path, 'w') as f:
                   f.write(str(soup))
-                  f.truncate()
           EOF
-      - name: Push SVGs to output
+
+      - name: Publish to GitHub Pages
         uses: crazy-max/ghaction-github-pages@v3.1.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           target_branch: output
           build_dir: dist
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
