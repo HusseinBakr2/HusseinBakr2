@@ -6,46 +6,33 @@ on:
   workflow_dispatch:        # Manual trigger
   push:
     branches:
-      - main               # Trigger on push to the main branch
+      - main
 
 jobs:
   generate:
     runs-on: ubuntu-latest
     permissions:
-      contents: write      # Grant write permissions
+      contents: write
     
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4  # Checkout the repository code
+        uses: actions/checkout@v4
 
+      # Create directory FIRST
+      - name: Create dist directory
+        run: mkdir -p dist
+
+      # Now generate snake
       - name: Generate Snake
         uses: Platane/snk@master
         with:
           github_user_name: HusseinBakr2
-          svg_out_path: dist/github-contribution-grid-snake.svg  # Path to the generated SVG file
-
-      - name: Create dist directory if missing
-        run: mkdir -p dist
-
-      - name: Debug Snake Generation
-        run: |
-          echo "Listing all files in the workspace:"
-          ls -la
-          echo "Checking the 'dist' directory:"
-          ls -la dist || echo "Directory 'dist' does not exist."
-
-      - name: List files in dist
-        run: ls -la dist
+          svg_out_path: dist/github-contribution-grid-snake.svg
 
       - name: Commit and Push
         run: |
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --global user.name "GitHub Actions"
-          if [ -f dist/github-contribution-grid-snake.svg ]; then
-            echo "File found. Committing and pushing changes."
-            git add dist/github-contribution-grid-snake.svg
-            git commit -m "Update snake animation"
-            git push
-          else
-            echo "File 'dist/github-contribution-grid-snake.svg' not found. Skipping commit."
-            exit 0
+          git add dist/github-contribution-grid-snake.svg
+          git commit -m "Update snake animation" || echo "No changes to commit"
+          git push
