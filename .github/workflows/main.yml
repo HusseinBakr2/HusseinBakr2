@@ -21,13 +21,13 @@ jobs:
 
       - name: Generate snake SVGs
         uses: Platane/snk/svg-only@v3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           github_user_name: ${{ github.repository_owner }}
           outputs: |
             dist/github-contribution-grid-snake.svg
             dist/github-contribution-grid-snake-dark.svg?palette=github-dark
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Debug: list dist dir
         run: |
@@ -43,19 +43,20 @@ jobs:
 
       - name: Install Python deps
         run: |
-          sudo apt-get update
-          sudo apt-get install -y python3-pip
+          sudo apt-get update && sudo apt-get install -y python3-pip
           pip3 install beautifulsoup4
 
-      - name: Add custom text to SVGs
+      - name: Write and run Python script to add text
         run: |
-          python3 <<'EOF'
+          cat << 'EOF' > add_text.py
           from bs4 import BeautifulSoup
           import sys
+
           files = [
               'dist/github-contribution-grid-snake.svg',
               'dist/github-contribution-grid-snake-dark.svg'
           ]
+
           for path in files:
               try:
                   with open(path) as f:
@@ -63,21 +64,22 @@ jobs:
               except FileNotFoundError:
                   print(f"ERROR: {path} not found", file=sys.stderr)
                   sys.exit(1)
+
               for r in soup.find_all('rect', fill=['#40c463', '#26a641']):
                   x, y, w, h = map(float, (r['x'], r['y'], r['width'], r['height']))
-                  t = soup.new_tag(
-                      'text',
-                      x=str(x + w/2),
-                      y=str(y + h/2),
-                      **{'dominant-baseline':'middle', 'text-anchor':'middle'},
-                      fill='#ffffff' if r['fill']=='#26a641' else '#000000',
-                      **{'font-size':'8', 'font-family':'Arial'}
-                  )
+                  t = soup.new_tag('text',
+                                   x=str(x + w/2), y=str(y + h/2),
+                                   **{'dominant-baseline':'middle', 'text-anchor':'middle'},
+                                   fill='#ffffff' if r['fill']=='#26a641' else '#000000')
+                  t['font-size'] = '8'
+                  t['font-family'] = 'Arial'
                   t.string = "Hussein Bakr"
                   r.insert_after(t)
+
               with open(path, 'w') as f:
                   f.write(str(soup))
           EOF
+          python3 add_text.py
 
       - name: Debug: list dist after Python
         run: |
@@ -86,8 +88,8 @@ jobs:
 
       - name: Push SVGs to output
         uses: crazy-max/ghaction-github-pages@v3.1.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           target_branch: output
           build_dir: dist
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
