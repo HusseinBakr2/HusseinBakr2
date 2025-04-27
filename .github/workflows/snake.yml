@@ -1,8 +1,8 @@
-name: Generate Snake Animation
+name: Snake Animation Generator
 on:
+  workflow_dispatch:
   schedule:
     - cron: "0 0 * * *"
-  workflow_dispatch:
   push:
     branches: [main]
 
@@ -12,49 +12,44 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Generate Snake
         uses: Platane/snk@v3
-        id: snake-gif
         with:
           github_user_name: ${{ github.repository_owner }}
           outputs: |
             dist/github-contribution-grid-snake.svg
             dist/github-contribution-grid-snake-dark.svg?palette=github-dark
 
-      - name: Add Custom Text
+      - name: Add Customization
         run: |
           sudo apt-get install -y xmlstarlet
           
           # Light Mode
           xmlstarlet ed -L \
-            --subnode '//svg' --type elem -n 'text' \
-            --var text '$prev' \
-            --insert '$text' --type attr -n 'x' -v '50%' \
-            --insert '$text' --type attr -n 'y' -v '35' \
-            --insert '$text' --type attr -n 'font-family' -v 'Arial' \
-            --insert '$text' --type attr -n 'font-size' -v '24' \
-            --insert '$text' --type attr -n 'fill' -v '#2F4F4F' \
-            --insert '$text' --type attr -n 'text-anchor' -v 'middle' \
-            --insert '$text' --type text -v 'Hussein Bakr' \
+            --subnode '//svg' -t elem -n 'text' -v 'Hussein Bakr' \
+            --insert '//text' -t attr -n 'x' -v '50%' \
+            --insert '//text' -t attr -n 'y' -v '30' \
+            --insert '//text' -t attr -n 'font-family' -v 'Arial' \
+            --insert '//text' -t attr -n 'font-size' -v '24' \
+            --insert '//text' -t attr -n 'fill' -v '#2F4F4F' \
+            --insert '//text' -t attr -n 'text-anchor' -v 'middle' \
             dist/github-contribution-grid-snake.svg
 
           # Dark Mode
           xmlstarlet ed -L \
-            --subnode '//svg' --type elem -n 'text' \
-            --var text '$prev' \
-            --insert '$text' --type attr -n 'x' -v '50%' \
-            --insert '$text' --type attr -n 'y' -v '35' \
-            --insert '$text' --type attr -n 'font-family' -v 'Arial' \
-            --insert '$text' --type attr -n 'font-size' -v '24' \
-            --insert '$text' --type attr -n 'fill' -v '#F0F0F0' \
-            --insert '$text' --type attr -n 'text-anchor' -v 'middle' \
-            --insert '$text' --type text -v 'Hussein Bakr' \
+            --subnode '//svg' -t elem -n 'text' -v 'Hussein Bakr' \
+            --insert '//text' -t attr -n 'x' -v '50%' \
+            --insert '//text' -t attr -n 'y' -v '30' \
+            --insert '//text' -t attr -n 'font-family' -v 'Arial' \
+            --insert '//text' -t attr -n 'font-size' -v '24' \
+            --insert '//text' -t attr -n 'fill' -v '#F0F0F0' \
+            --insert '//text' -t attr -n 'text-anchor' -v 'middle' \
             dist/github-contribution-grid-snake-dark.svg
 
       - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
+        uses: peaceiris/actions-gh-pages@v3.9.3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
