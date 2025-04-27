@@ -1,12 +1,12 @@
-name: generate animations
+name: generate animation
 on:
   schedule:
-    - cron: "0 */24 * * *" # Fix: added missing asterisk
+    - cron: "0 */24 * * *"  # Fixed the syntax (added missing asterisk)
   workflow_dispatch:
   push:
     branches:
       - master
-      - main # Added main branch to support both naming conventions
+      - main  # Added in case you use main branch
 jobs:
   generate:
     permissions: 
@@ -15,7 +15,11 @@ jobs:
     timeout-minutes: 10
     
     steps:
-      # Generate standard snake SVGs
+      # First checkout the repository so we can access files
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      # Generate snake SVGs using your existing configuration
       - name: Generate snake SVGs
         uses: Platane/snk/svg-only@v3
         with:
@@ -23,13 +27,12 @@ jobs:
           outputs: |
             dist/github-contribution-grid-snake.svg
             dist/github-contribution-grid-snake-dark.svg?palette=github-dark
-      
-      # Create custom Hussein Bakr animation
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '16'
-      
+
+      # Create directory for the new file if it doesn't exist
+      - name: Create directory
+        run: mkdir -p dist
+
+      # Create custom Hussein Bakr contribution animation
       - name: Create custom animation
         run: |
           cat > dist/hussein-contribution-animation.svg << 'EOF'
@@ -202,8 +205,49 @@ jobs:
             </g>
           </svg>
           EOF
+
+      # Add modification to existing snake SVGs (keeping your custom text addition)
+      - name: Add custom text to SVGs
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y python3 python3-pip
+          pip install beautifulsoup4
+          python3 <<EOF
+          from bs4 import BeautifulSoup
+          import os
+          files = [
+              'dist/github-contribution-grid-snake.svg',
+              'dist/github-contribution-grid-snake-dark.svg'
+          ]
+          for file_path in files:
+              with open(file_path, 'r+') as f:
+                  soup = BeautifulSoup(f, 'xml')
+                  green_rects = soup.find_all('rect', {'fill': ['#40c463', '#26a641']})
+                  
+                  for rect in green_rects:
+                      x = float(rect['x'])
+                      y = float(rect['y'])
+                      width = float(rect['width'])
+                      height = float(rect['height'])
+                      
+                      text = soup.new_tag('text')
+                      text['x'] = f"{x + width/2}"
+                      text['y'] = f"{y + height/2}"
+                      text['dominant-baseline'] = "middle"
+                      text['text-anchor'] = "middle"
+                      text['fill'] = "#ffffff" if rect['fill'] == '#26a641' else "#000000"
+                      text['font-size'] = "8"
+                      text['font-family'] = "Arial"
+                      text.string = "Hussein Bakr"
+                      
+                      rect.insert_after(text)
+                  f.seek(0)
+                  f.write(str(soup))
+                  f.truncate()
+          EOF
       
-      - name: Push animations to output branch
+      # Push SVGs to output branch
+      - name: Push SVGs to output
         uses: crazy-max/ghaction-github-pages@v3.1.0
         with:
           target_branch: output
