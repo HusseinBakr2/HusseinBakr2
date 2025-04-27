@@ -28,10 +28,16 @@ jobs:
           tile_color: '#708090'   # رمادي فاتح للخلايا
           output: dist/github-contribution-grid-snake.svg
 
+      - name: List files in dist
+        run: ls -la dist
+
       - name: Commit and Push
         run: |
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --global user.name "GitHub Actions"
-          git add dist/github-contribution-grid-snake.svg
-          git commit -m "Update snake animation"
-          git push
+          if [ -f dist/github-contribution-grid-snake.svg ]; then
+            git add dist/github-contribution-grid-snake.svg
+            git commit -m "Update snake animation"
+            git push
+          else
+            echo "File not found, skipping commit."
