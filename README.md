@@ -22,6 +22,9 @@
 
 <br/>
 
+
+<hr/>
+
 <h3 align="center">🏆 GitHub Trophies:</h3>
 <p align="center">
   <img src="https://github-profile-trophy.vercel.app/?username=husseinbakr2&theme=gruvbox&no-frame=true&no-bg=true&margin-w=15&margin-h=15&row=1&column=6" height="160" alt="GitHub Trophies"/>
@@ -29,7 +32,7 @@
 
 <hr/>
 
-![Snake animation](https://raw.githubusercontent.com/HusseinBakr2/HusseinBakr2/main/dist/github-contribution-grid-snake.svg)
+
 
 <h3 align="center">🛠️ Languages and Tools:</h3>
 <p align="center">
@@ -101,8 +104,9 @@
 
 <hr/>
 
+
 <h3 align="center">🐍 Contribution Snake:</h3>
 <p align="center">
- <img src="https://raw.githubusercontent.com/HusseinBakr2/HusseinBakr2/output/github-contribution-grid-snake-dark.svg#gh-dark-mode-only" alt="Snake animation" width="80%"/>
- <img src="https://raw.githubusercontent.com/HusseinBakr2/HusseinBakr2/output/github-contribution-grid-snake.svg#gh-light-mode-only" alt="Snake animation" width="80%"/>
+ <img src="https://raw.githubusercontent.com/HusseinBakr2/HusseinBakr2/output/github-contribution-grid-snake-dark.svg#gh-dark-mode-only" alt="Custom Snake Animation" width="80%"/>
+ <img src="https://raw.githubusercontent.com/HusseinBakr2/HusseinBakr2/output/github-contribution-grid-snake.svg#gh-light-mode-only" alt="Custom Snake Animation" width="80%"/>
 </p>
